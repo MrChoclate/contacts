@@ -1,0 +1,141 @@
+#:kivy 1.8.0
+
+<DelEventPopup>:
+    size_hint: (0.3, 0.3)
+    title: 'Voulez vous vraiment supprimer cet évènement?'
+    title_size: 15
+
+    BoxLayout:
+        spacing: 20
+        padding: 20
+        Button:
+            text: "Oui"
+            on_release: root.delete_event()
+        Button:
+            text: "Non"
+            on_release: root.dismiss()
+
+<EventHandler>:
+    size_hint: (0.4, 0.4)
+    title: "Gestion d'un évènement"
+    title_size: 20
+    name: name
+    location: location
+
+    GridLayout:
+        spacing: "15dp"
+        padding: "15dp"
+        cols: 2
+
+        Label:
+            font_size: 18
+            text: "Nom"
+            text_size: self.size
+        TextInput:
+            id: name
+            font_size: 18
+            write_tab: False
+        Label:
+            font_size: 18
+            text: "Lieu"
+            text_size: self.size
+            write_tab: False
+        TextInput:
+            id: location
+            font_size: 18
+        Button:
+            text: "Sauvegarder"
+            on_release: root.save()
+        Button:
+            text: "Annuler"
+            on_release: root.dismiss()
+
+
+<Event>:
+    event:
+    name: name
+    size_hint_y: None
+    height: 64
+
+
+    BoxLayout:
+        pos: root.pos
+        orienation: "horizontal"
+        width: self.parent.width
+        height: self.parent.height
+        spacing: "20dp"
+
+        Label:
+            id: name
+            size_hint: (0.7, 1)
+            font_size: 25
+            text: root.event.name + u' - ' + root.event.location
+            text_size: self.size
+
+        Button:
+            size_hint: (None, None)
+            on_release: root.add_contact()
+            background_normal: "img/add_contact.png"
+            height: root.height
+            width: root.height
+            border: (0, 0, 0, 0)
+        Button:
+            size_hint: (None, None)
+            on_release: root.edit_event()
+            background_normal: "img/edit_event.png"
+            height: root.height
+            width: root.height
+            border: (0, 0, 0, 0)
+        Button:
+            size_hint: (None, None)
+            on_release: root.delete_event()
+            background_normal: "img/delete_event.png"
+            height: root.height
+            width: root.height
+            border: (0, 0, 0, 0)
+        
+
+<EventsList>:
+    list_layout: list_layout_id
+
+    BoxLayout:
+        orientation: "vertical"
+        width: self.parent.width
+        height: self.parent.height
+        spacing: 10
+        padding: 10
+
+        BoxLayout:
+            size_hint: (1, 0.1)
+            orientation: "horizontal"
+
+            Image:
+                source: "img/logo.jpg"
+                size_hint: (None, 1)
+
+            Label:
+                size_hint: (1, 1)
+                font_size: 30
+                text: "Liste des évènements"
+
+            Button:
+                background_normal: "img/sync.png"
+                size_hint: (None, 1)
+                width: self.height
+                border: (0, 0, 0, 0)
+                on_release: root.sync()
+
+        BoxLayout:
+            id: list_layout_id
+            orientation: "vertical"
+            size_hint: (1, 0.9)
+            spacing: 10
+            padding: 10
+
+        Button:
+            size_hint: (None, None)
+            width: 200
+            height: 75
+            text: "Ajouter un évènement"
+            font_size: "15dp"
+            on_release: root.add_event()

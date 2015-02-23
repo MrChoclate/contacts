@@ -1,0 +1,218 @@
+#:kivy 1.8.0
+
+<SpinnerOption>:
+    size_hint_y: None
+    height: "35dp"
+    font_size: self.height / 2
+
+<ContactForm>:
+	gender: gender_id
+	last_name: last_name_id
+	first_name: first_name_id
+	mail: mail_id
+	mail2: mail2_id
+	phone: phone_id
+	street: street_id
+	town: town_id
+	postal_code: postal_code_id
+	country: country_id
+	degree: degree_id
+	studies: studies_id
+	master: master_id
+	eisti: eisti_id
+	comment: comment_id
+	acc_img: acc_id
+	save_btn: save_id
+	title: title_id
+
+	BoxLayout:
+		orientation: "vertical"
+		width: self.parent.width
+		height: self.parent.height
+		spacing: "20dp"
+		padding: "20dp"
+
+		BoxLayout:
+			orientation: "horizontal"
+			size_hint: (1, 0.1)
+
+			Image:
+				source: "img/logo.jpg"
+				size_hint: (None, 1)
+
+			Label:
+				id: title_id
+				font_size: "40dp"
+				text: "Contact"
+				size_hint: (0.7, 1)
+
+			FloatLayout:
+				size_hint: (0.1, 1)
+
+				Image:
+					id: acc_id
+					pos: self.parent.pos
+					source: "img/compteur.png"
+
+				Label:
+					pos: (self.parent.x - 20, self.parent.y - 5)
+					text: str(root.acc_number)
+			
+			Button:
+				background_normal: "img/return.png"
+				size_hint: (None, 1)
+				width: self.height
+				border: (0, 0, 0, 0)
+				on_release: 
+					root.manager.transition.direction = 'right'
+					root.manager.current = "EventsList"
+
+		BoxLayout:
+			orientation: "horizontal"
+			size_hint: (1, 0.9)
+
+			GridLayout:
+				id: first_grid
+				spacing: "15dp"
+				padding: "15dp"
+				#row_default_height: "30dp"
+        		#row_force_default: True
+				cols: 2
+
+				Label:
+					font_size: self.height / 1.5
+					markup: True
+					text: "[b]Genre[/b]"
+					text_size: self.size
+				Spinner:
+					id: gender_id
+					text: "Monsieur"
+					values: ("Monsieur", "Madame")
+				Label:
+					font_size: self.height / 1.5
+					markup: True
+					text: "[b]Nom[/b]"
+					text_size: self.size
+				TextInput:
+					id: last_name_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "[b]Prénom[/b]"
+					markup: True
+					text_size: self.size
+				TextInput:
+					id: first_name_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					markup: True
+					text: "[b]Mail[/b]"
+					text_size: self.size
+				TextInput:
+					id: mail_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "Autre mail"
+					text_size: self.size
+				TextInput:
+					id: mail2_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "Adresse"
+					text_size: self.size
+				TextInput:
+					id: street_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "Ville"
+					text_size: self.size
+				TextInput:
+					id: town_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "Code postal"
+					text_size: self.size
+				TextInput:
+					id: postal_code_id
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "Pays"
+					text_size: self.size
+				TextInput:
+					id: country_id
+					text: "France"
+					font_size: self.height / 2
+				Label:
+					font_size: self.height / 1.5
+					text: "Téléphone"
+					text_size: self.size
+				TextInput:
+					id: phone_id
+					font_size: self.height / 2
+			BoxLayout:
+				orientation: "vertical"
+
+				GridLayout:
+					size_hint: (1, 0.55)
+					spacing: "15dp"
+					padding: "15dp"
+					#row_default_height: "30dp"
+	        		#row_force_default: True
+					cols: 2
+
+					Label:
+						font_size: self.height / 1.5
+						markup: True
+						text: "[b]Etudes[/b]"
+						text_size: self.size
+					Spinner:
+						id: studies_id
+						text: "-"
+						values: ("1e S", "Terminal S", "L1", "L2, L3", "Prépa 1e année", "Prépa 2e année", "DUT 1e année", "DUT 2e année", "Autres")
+					Label:
+						font_size: self.height / 1.5
+						text: "Dernier diplôme"
+						text_size: self.size
+					TextInput:
+						id: degree_id
+						font_size: self.height / 2
+					Label:
+						font_size: self.height / 1.5
+						text: "Expérience mastère"
+						text_size: self.size
+					TextInput:
+						id: master_id
+						font_size: self.height / 2
+					Label:
+						font_size: self.height / 2.5
+						text: "Comment avez-vous connu l'EISTI?"
+						text_size: self.size
+					Spinner:
+						id: eisti_id
+						text: "Dans ce salon"
+						values: ("Dans ce salon", "Dans la presse", "Forum dans votre lycée", "Plaquette EISTI reçue", "Par relation (amis, famille)", "Via les moteurs de recherche", "Sur un site web d'orientation", "Via APB ou SCEI", "Autres")
+					Label:
+						font_size: self.height / 1.5
+						text: "Commentaire"
+						text_size: self.size
+					TextInput:
+						id: comment_id
+						font_size: self.height / 2
+				RelativeLayout:
+					size_hint: (1, 0.5)
+
+					Button:
+						id: save_id
+						center: (self.parent.width / 2, self.parent.height / 2)
+						size_hint: (None, None)
+						width: "200dp"
+						height: "70dp"
+						text: "Enregistrer"
+						font_size: "20dp"
+						on_release: root.save()
