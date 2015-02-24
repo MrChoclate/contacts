@@ -1,9 +1,13 @@
 import datetime
 
+from kivy.app import App
+from kivy.core.window import Window
+from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.uix.popup import Popup
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.textinput import TextInput
 from kivy.properties import NumericProperty, ObjectProperty
 from kivy.lang import Builder
 
@@ -12,6 +16,44 @@ import sync
 
 Builder.load_file("contact.kv")
 Builder.load_file("events.kv")
+
+KEYBOARD_HEIGHT = 292  # FIXME: Default value
+
+
+
+class Contacts(ScreenManager):
+    pass
+
+class TextForm(TextInput):
+
+	def __init__(self, **kwargs):
+		super(TextForm, self).__init__(**kwargs)
+		
+		self.bind(focus=self.span_keyboard_on_focus)
+
+	@staticmethod
+	def span_keyboard_on_focus(instance, value):
+		"""Span the keyboard when the instance is focus or unfocus (value is bool)
+		"""
+
+		to_move = Window.children[0]
+
+		if value:  # User focus
+			print instance.y, to_move.y
+			if instance.y <= KEYBOARD_HEIGHT:
+				y = KEYBOARD_HEIGHT - instance.y + to_move.y
+
+				# Avoid reset when we change focus
+				Animation.cancel_all(to_move, 'y')
+				Animation(y=y, t='in_out_cubic').start(to_move)
+		else:
+			if type(to_move) == Contacts:
+				reset = 0
+			else:
+				reset = (Window.height - to_move.height) / 2
+
+			print reset
+			Animation(y=reset, t='in_out_cubic').start(to_move)
 
 class ContactForm(Screen):
 	"""This is where you register your contact."""

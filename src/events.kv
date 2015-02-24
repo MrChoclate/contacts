@@ -1,4 +1,4 @@
-#:kivy 1.8.0
+#:kivy 1.9.0
 
 <DelEventPopup>:
     size_hint: (0.3, 0.3)
@@ -31,7 +31,7 @@
             font_size: 18
             text: "Nom"
             text_size: self.size
-        TextInput:
+        TextForm:
             id: name
             font_size: 18
             write_tab: False
@@ -40,7 +40,7 @@
             text: "Lieu"
             text_size: self.size
             write_tab: False
-        TextInput:
+        TextForm:
             id: location
             font_size: 18
         Button:

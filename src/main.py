@@ -4,20 +4,22 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
+from kivy.uix.vkeyboard import VKeyboard
 from kivy.properties import NumericProperty, ObjectProperty
 from kivy.core.window import Window
 
+
 import widgets
 
+Window.softinput_mode = ''
 
-class Contacts(ScreenManager):
-    pass
+
 
 class ContactsApp(App):
     def build(self):
         Window.bind(on_keyboard=self.hook_keyboard)
 
-        return Contacts()
+        return widgets.Contacts()
 
     def on_pause(self):
         return True
@@ -33,5 +35,7 @@ class ContactsApp(App):
             return True
         
 if __name__ == '__main__':
+
     ContactsApp().run()
 
+    
