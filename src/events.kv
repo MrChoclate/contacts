@@ -108,6 +108,7 @@
         BoxLayout:
             size_hint: (1, 0.1)
             orientation: "horizontal"
+            spacing: 20
 
             Image:
                 source: "img/logo.jpg"
@@ -117,6 +118,13 @@
                 size_hint: (1, 1)
                 font_size: 30
                 text: "Liste des évènements"
+
+            Button:
+                background_normal: "img/save_csv.png"
+                size_hint: (None, 1)
+                width: self.height
+                border: (0, 0, 0, 0)
+                on_release: root.save_csv()
 
             Button:
                 background_normal: "img/sync.png"

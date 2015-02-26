@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 from kivy import platform
+from kivy.app import App
 from kivy.network.urlrequest import UrlRequest
 
 from jnius import autoclass
@@ -6,9 +9,10 @@ from jnius import autoclass
 import models
 
 import json
+import datetime
 
-
-# Getting the _unique_id, it's take a lot of ressources, so it is done once
+# Getting the _unique_id, it's take a lot of ressources (~1-2 seconds on 
+# Archos Neon 101), so it is done only once.
 if platform ==  'android':
     _PythonActivity = autoclass('org.renpy.android.PythonActivity')
     _Secure = autoclass('android.provider.Settings$Secure')
@@ -37,7 +41,6 @@ def synchronize():
         data['accompanists'] = {str(acc.date): acc.number 
                                 for acc in accompanists}
 
-        print data
         UrlRequest(url=url, req_body=json.dumps(data))
 
 
@@ -51,7 +54,45 @@ def synchronize():
             body = {key: models.make_serializable(val)
                 for key, val in data.iteritems()}
 
-            print body
             UrlRequest(url=url, req_body=json.dumps(body))
 
+
+def save_csv():
+    for event in models.Session.query(models.Event).all():
+        save_csv_event(event)
+
+def save_csv_event(event):
+    event_name = event.name.encode('utf-8')
+    event_location = event.location.encode('utf-8')
+
+    source = '/sdcard/exportcsv/' if platform == 'android' else ''
+    filename = source + event_name + '-' + event_location + '-'
+    filename += str(datetime.datetime.now()) + '.csv'
+
+    with open(filename, 'w') as f:
+        accompanists = models.Session.query(models.Accompanists).\
+                        filter(models.Accompanists.event_id == event.id).all()
+        header = ["Nom de l'évènement", "Lieu"]
+        header += [str(a.date) for a in accompanists]
+        f.write(';'.join(header) + '\n')
+        header = [event_name, event_location]
+        header += [str(a.number) for a in accompanists]
+        f.write(';'.join(header) + '\n\n')
+
+        header = ["Genre", "Nom", "Prénom",  "Adresse", "", "CP", "Ville", 
+                  "Pays", "Mail", "Mail2", "Niveau d'étude", "Commentaire", 
+                  "Téléphone", "Dernier diplôme", "Expérience mastère",
+                  "Connaissance eisti", "Date"]
+        order = ["gender", "last_name", "first_name", "street", "", 
+                 "postal_code", "town", "country", "mail", "mail2",
+                 "studies", "comment", "phone", "degree", "master",
+                 "eisti"]
+        f.write(';'.join(header) + '\n')
+
+        for participate in event.contacts:
+            contact = participate.contact
+            data = [getattr(contact, attr) if attr else '' for attr in order]
+            data.append(participate.date)
+            data = [unicode(x).encode('utf-8') for x in data]
+            f.write(';'.join(data) + '\n')
 

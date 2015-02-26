@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 __version__ = "0.2.0"
 
 from kivy.app import App
@@ -5,6 +7,7 @@ from kivy.core.window import Window
 from kivy.config import Config
 
 import widgets
+
 
 class ContactsApp(App):
     def build(self):

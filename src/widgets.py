@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import datetime
 
 from kivy.app import App
@@ -280,3 +282,6 @@ class EventsList(Screen):
 
 	def sync(self):
 		sync.synchronize()
+
+	def save_csv(self):
+		sync.save_csv()

@@ -5,3 +5,4 @@ venv*
 .buildozer*
 bin/*
 db.sqlite3
+*.csv
