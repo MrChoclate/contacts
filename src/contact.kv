@@ -3,6 +3,7 @@
 <TextForm>:
 	font_size: self.height / 2
 	write_tab: False
+	multiline: False
 
 <SpinnerOption>:
     size_hint_y: None
@@ -113,12 +114,14 @@
 					text_size: self.size
 				TextForm:
 					id: mail_id
+					input_type: 'mail'
 				Label:
 					font_size: self.height / 1.5
 					text: "Autre mail"
 					text_size: self.size
 				TextForm:
 					id: mail2_id
+					input_type: 'mail'
 				Label:
 					font_size: self.height / 1.5
 					text: "Adresse"
@@ -137,6 +140,7 @@
 					text_size: self.size
 				TextForm:
 					id: postal_code_id
+					input_type: 'number'
 				Label:
 					font_size: self.height / 1.5
 					text: "Pays"
@@ -150,6 +154,7 @@
 					text_size: self.size
 				TextForm:
 					id: phone_id
+					input_type: 'tel'
 			BoxLayout:
 				orientation: "vertical"
 
@@ -182,6 +187,7 @@
 						text_size: self.size
 					TextForm:
 						id: master_id
+						input_type: 'number'
 					Label:
 						font_size: self.height / 2.5
 						text: "Comment avez-vous connu l'EISTI?"

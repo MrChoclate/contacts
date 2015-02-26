@@ -5,15 +5,27 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import ForeignKey
 
 import os.path
-import datetime 
+import datetime
+import json
 
 # Database connection
 _DATABASE = 'sqlite:///db.sqlite3'
-_DEBUG = True
+_DEBUG = False
  
 # ORM base
 _Base = declarative_base()
 
+def make_serializable(attr):
+	if type(attr) in [datetime.datetime, datetime.date]:
+		return str(attr) 
+	return attr
+
+def to_dict(obj):
+	return {c.name: make_serializable(getattr(obj, c.name))
+		for c in obj.__table__.columns}
+
+def serialize(dict):
+	return json.dumps(to_dict(obj))
 
 class Contact(_Base):
 	"""Contact class for the database.
@@ -51,7 +63,7 @@ class Event(_Base):
 	id = Column(Integer, primary_key=True)
 	name = Column(String)
 	location = Column(String)
-	contacts = relationship('Participate')
+	contacts = relationship('Participate', cascade='delete')
 
 class Participate(_Base):
 	"""Contacts participate to an event.
@@ -63,7 +75,7 @@ class Participate(_Base):
 	event_id = Column(Integer, ForeignKey('event.id'), primary_key=True)
 	contact_id = Column(Integer, ForeignKey('contact.id'), primary_key=True)
 	date = Column(DateTime, default=datetime.datetime.now())
-	contact = relationship('Contact')
+	contact = relationship('Contact', cascade='delete')
 
 class Accompanists(_Base):
 	"""Store the number of accompanists at an event.

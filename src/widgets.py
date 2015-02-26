@@ -20,7 +20,6 @@ Builder.load_file("events.kv")
 KEYBOARD_HEIGHT = 292  # FIXME: Default value
 
 
-
 class Contacts(ScreenManager):
     pass
 
@@ -28,31 +27,44 @@ class TextForm(TextInput):
 
 	def __init__(self, **kwargs):
 		super(TextForm, self).__init__(**kwargs)
-		
+
 		self.bind(focus=self.span_keyboard_on_focus)
+		self.bind(on_text_validate=self.next_on_validate)
+
+
+	@staticmethod
+	def next_on_validate(instance):
+		"""Change the focus when Enter is pressed.
+		"""
+		next  = instance._get_focus_next('focus_next')
+		if next:
+			instance.focus = False
+			next.focus = True
 
 	@staticmethod
 	def span_keyboard_on_focus(instance, value):
 		"""Span the keyboard when the instance is focus or unfocus (value is bool)
 		"""
-
 		to_move = Window.children[0]
 
 		if value:  # User focus
-			print instance.y, to_move.y
-			if instance.y <= KEYBOARD_HEIGHT:
-				y = KEYBOARD_HEIGHT - instance.y + to_move.y
+			def move(window, height):
+				if instance.y <= height:
+					offset = 0 if type(to_move) == Contacts else to_move.y
+					y = height - instance.y + offset + 10
 
-				# Avoid reset when we change focus
-				Animation.cancel_all(to_move, 'y')
-				Animation(y=y, t='in_out_cubic').start(to_move)
+					# Avoid reset when we change focus
+					Animation.cancel_all(to_move, 'y')
+					Animation(y=y, t='linear', d=0.5).start(to_move)
+
+			instance._keyboard_move = move
+			Window.bind(keyboard_height=move)
+			move(Window, Window.keyboard_height)
+			
 		else:
-			if type(to_move) == Contacts:
-				reset = 0
-			else:
-				reset = (Window.height - to_move.height) / 2
-
-			print reset
+			Window.unbind(keyboard_height=instance._keyboard_move)
+			reset = 0 if type(to_move) == Contacts else \
+					(Window.height - to_move.height) / 2
 			Animation(y=reset, t='in_out_cubic').start(to_move)
 
 class ContactForm(Screen):
@@ -240,8 +252,8 @@ class Event(Widget):
 
 	def get_EventsList(self):
 		"""Get the EventsList associated to self. 
-		This is done to avoid typing self.parent.parent.parent, and allows changing
-		the view without breaking the code."""
+		This is done to avoid typing self.parent.parent.parent, and allows 
+		changing the view without breaking the code."""
 
 
 		widget = self
@@ -267,4 +279,4 @@ class EventsList(Screen):
 		EventHandler(event=models.Event(name="", location=""), widget=self).open()
 
 	def sync(self):
-		print sync.get_unique_id()
+		sync.synchronize()

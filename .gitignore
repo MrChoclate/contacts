@@ -1,0 +1,7 @@
+*~
+*.pyc
+*.sublime*
+venv*
+.buildozer*
+bin/*
+db.sqlite3

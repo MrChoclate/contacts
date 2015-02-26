@@ -1,19 +1,10 @@
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.screenmanager import ScreenManager
-from kivy.uix.popup import Popup
-from kivy.uix.vkeyboard import VKeyboard
-from kivy.properties import NumericProperty, ObjectProperty
 from kivy.core.window import Window
-
+from kivy.config import Config
 
 import widgets
-
-Window.softinput_mode = ''
-
-
 
 class ContactsApp(App):
     def build(self):
@@ -28,14 +19,11 @@ class ContactsApp(App):
         pass
 
     def hook_keyboard(self, window, key, *largs):
-        if key == 27: # Android back button
+        if key == 27:  # Android back button
             self.root.transition.direction = 'right'
             if self.root.current != "EventsList":
                 self.root.current = "EventsList"
             return True
         
 if __name__ == '__main__':
-
     ContactsApp().run()
-
-    
