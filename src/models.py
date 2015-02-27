@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import os.path
+import datetime
+import json
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Date, Enum
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import ForeignKey
 
-import os.path
-import datetime
-import json
 
 # Database connection
 _DATABASE = 'sqlite:///db.sqlite3'
@@ -65,6 +66,8 @@ class Event(_Base):
 	id = Column(Integer, primary_key=True)
 	name = Column(String)
 	location = Column(String)
+	begin =  Column(Date, default=datetime.date.today())
+	end =  Column(Date, default=datetime.date.today())
 	contacts = relationship('Participate', cascade='delete')
 
 class Participate(_Base):

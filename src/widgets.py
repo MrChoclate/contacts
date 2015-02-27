@@ -87,7 +87,6 @@ class ContactForm(Screen):
 	master = ObjectProperty()
 	eisti = ObjectProperty()
 	comment = ObjectProperty()
-	acc_img = ObjectProperty()
 	save_btn = ObjectProperty()
 	title = ObjectProperty()
 	acc_number = NumericProperty(0)
@@ -133,8 +132,11 @@ class ContactForm(Screen):
 	def is_proper(self):
 		"""Check if the contact can be saved, some field must not be null."""
 
-		return bool(self.last_name.text and self.first_name.text and \
-					self.mail.text and self.studies.text != u' - ')
+		cond = self.last_name.text and self.first_name.text
+		cond = cond and self.mail.text and self.studies.text != u' - '
+		date = self.event.begin <= datetime.date.today() <= self.event.end
+		cond = cond and date
+		return bool(cond)
 
 	def save(self):
 		if not self.is_proper():
@@ -170,13 +172,6 @@ class ContactForm(Screen):
 
 		self.reset()
 
-	def on_touch_down(self, touch):
-		if self.acc_img.x <= touch.x <= self.acc_img.x + self.acc_img.width and \
-		   self.acc_img.y <= touch.y <= self.acc_img.y + self.acc_img.height:
-			self.increase_acc()
-
-		# Propagate the event
-		super(ContactForm, self).on_touch_down(touch)
 
 class DelEventPopUp(Popup):
 	"""A yes-no popup to confirm the deletion of an event"""
@@ -197,6 +192,8 @@ class EventHandler(Popup):
 
 	name = ObjectProperty()
 	location = ObjectProperty()
+	begin = ObjectProperty()
+	end = ObjectProperty()
 
 	def __init__(self, **kwargs):
 		super(EventHandler, self).__init__(**kwargs)
@@ -209,10 +206,21 @@ class EventHandler(Popup):
 	def load_event(self):
 		self.name.text = self.event.name
 		self.location.text = self.event.location
+		self.begin.text = self.event.begin.strftime("%d/%m/%y")
+		self.end.text = self.event.end.strftime("%d/%m/%y")
 
 	def save(self):
 		self.event.name = self.name.text.decode('utf-8')
 		self.event.location = self.location.text.decode('utf-8')
+		try:
+			self.event.begin = datetime.datetime.\
+							strptime(self.begin.text, "%d/%m/%y").date()
+			self.event.end = datetime.datetime.\
+							strptime(self.end.text, "%d/%m/%y").date()
+		except:
+			self.dismiss()
+			# TODO: Errors should never pass silently.
+			return
 
 		models.Session.add(self.event)
 		models.Session.commit()
@@ -278,7 +286,9 @@ class EventsList(Screen):
 			self.list_layout.add_widget(Event(event=event))
 
 	def add_event(self):
-		EventHandler(event=models.Event(name="", location=""), widget=self).open()
+		event = models.Event(name="", location="", 
+			begin=datetime.date.today(), end=datetime.date.today())
+		EventHandler(event=event, widget=self).open()
 
 	def sync(self):
 		sync.synchronize()

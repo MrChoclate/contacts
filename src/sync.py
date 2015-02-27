@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import json
+import datetime
+
 from kivy import platform
 from kivy.app import App
 from kivy.network.urlrequest import UrlRequest
@@ -7,9 +10,6 @@ from kivy.network.urlrequest import UrlRequest
 from jnius import autoclass
 
 import models
-
-import json
-import datetime
 
 # Getting the _unique_id, it's take a lot of ressources (~1-2 seconds on 
 # Archos Neon 101), so it is done only once.

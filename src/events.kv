@@ -16,11 +16,13 @@
             on_release: root.dismiss()
 
 <EventHandler>:
-    size_hint: (0.4, 0.4)
+    size_hint: (0.6, 0.6)
     title: "Gestion d'un évènement"
     title_size: 20
     name: name
     location: location
+    begin: begin
+    end: end
 
     GridLayout:
         spacing: "15dp"
@@ -43,6 +45,24 @@
         TextForm:
             id: location
             font_size: 18
+        Label:
+            font_size: 18
+            text: "Date début"
+            text_size: self.size
+            write_tab: False
+        TextForm:
+            id: begin
+            font_size: 18
+            input_type: 'datetime'
+        Label:
+            font_size: 18
+            text: "Date fin"
+            text_size: self.size
+            write_tab: False
+        TextForm:
+            id: end
+            font_size: 18
+            input_type: 'datetime'
         Button:
             text: "Sauvegarder"
             on_release: root.save()

@@ -7,7 +7,7 @@
 
 <SpinnerOption>:
     size_hint_y: None
-    height: "35dp"
+    height: "40dp"
     font_size: self.height / 2
 
 <ContactForm>:
@@ -26,7 +26,6 @@
 	master: master_id
 	eisti: eisti_id
 	comment: comment_id
-	acc_img: acc_id
 	save_btn: save_id
 	title: title_id
 
@@ -54,13 +53,17 @@
 			FloatLayout:
 				size_hint: (0.1, 1)
 
-				Image:
-					id: acc_id
-					pos: self.parent.pos
-					source: "img/compteur.png"
+				Button:
+					background_normal: "img/compteur.png"
+					size_hint: (None, 1)
+					width: self.height
+					x: self.parent.x + self.parent.width - self.width
+					y: self.parent.y
+					border: (0, 0, 0, 0)
+					on_release: root.increase_acc()
 
 				Label:
-					pos: (self.parent.x - 20, self.parent.y - 5)
+					pos: (self.parent.x, self.parent.y - 5)
 					text: str(root.acc_number)
 			
 			Button:
