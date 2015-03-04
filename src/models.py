@@ -41,19 +41,28 @@ class Contact(_Base):
  	id = Column(Integer, primary_key=True)
  	last_name = Column(String, nullable=False)
  	first_name = Column(String, nullable=False)
- 	gender = Column(Enum("Monsieur", "Madame"), nullable=False, default="Monsieur")
+ 	gender = Column(Enum("Monsieur", "Madame"), nullable=False)
  	postal_code = Column(Integer, nullable=False)
  	street = Column(String, nullable=False)
  	town = Column(String, nullable=False)
- 	country = Column(String, nullable=False, default="France")
+ 	country = Column(String, nullable=False)
 	mail = Column(String, nullable=False)
-	mail2 = Column(String)
-	phone = Column(String)
+	mail2 = Column(String, nullable=False)
+	phone = Column(String, nullable=False)
 	degree = Column(String, nullable=False)
 	studies = Column(String, nullable=False)
 	master = Column(Integer, nullable=False)
-	comment = Column(String)
+	comment = Column(String, nullable=False)
 	eisti = Column(String, nullable=False)
+
+	def __init__(self):
+		self.last_name = self.first_name = self.mail = self.mail2 = ""
+		self.phone = self.street = self.town = self.postal_code = "" 
+		self.degree = self.master = self.comment = ""
+		self.studies = "-"
+		self.gender = "Monsieur"
+		self.country = "France"
+		self.eisti = "Dans ce salon"
 
 class Event(_Base):
 	"""Event class for the database.
@@ -79,7 +88,7 @@ class Participate(_Base):
 
 	event_id = Column(Integer, ForeignKey('event.id'), primary_key=True)
 	contact_id = Column(Integer, ForeignKey('contact.id'), primary_key=True)
-	date = Column(DateTime, default=datetime.datetime.now())
+	date = Column(DateTime, nullable=False)
 	contact = relationship('Contact', cascade='delete')
 
 class Accompanists(_Base):
@@ -101,11 +110,3 @@ Session = _session_factory()
 # Initialize database if it doesn't exist
 if not os.path.exists('db.sqlite3'):
 	_Base.metadata.create_all(_engine)
-
-	# Add dummy events
-	Session.add(Event(name="Event 1", location=u"Ici"))
-	Session.add(Event(name="Event 2", location=u"La"))
-	Session.add(Event(name="Event 3", location=u"Loin de THEMERICOURT"))
-
-
-	Session.commit()

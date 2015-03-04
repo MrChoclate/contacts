@@ -4,54 +4,68 @@
 	font_size: self.height / 2
 	write_tab: False
 	multiline: False
+	background_color: [1., 1., 1., 0.5]
+	cursor_color: [0, 0, 0, 1]
 
 <SpinnerOption>:
     size_hint_y: None
     height: "40dp"
     font_size: self.height / 2
+	background_color: [0.5, 0.5, 1, 1]
 
 <ContactForm>:
-	gender: gender_id
-	last_name: last_name_id
-	first_name: first_name_id
-	mail: mail_id
-	mail2: mail2_id
-	phone: phone_id
-	street: street_id
-	town: town_id
-	postal_code: postal_code_id
-	country: country_id
-	degree: degree_id
-	studies: studies_id
-	master: master_id
-	eisti: eisti_id
-	comment: comment_id
-	save_btn: save_id
-	title: title_id
+	gender: gender
+	last_name: last_name
+	first_name: first_name
+	mail: mail
+	mail2: mail2
+	phone: phone
+	street: street
+	town: town
+	postal_code: postal_code
+	country: country
+	degree: degree
+	studies: studies
+	master: master
+	eisti: eisti
+	comment: comment
+	save_btn: save
+	title: title
+	date: date
+
+	on_pre_enter: root.update_title()
 
 	BoxLayout:
 		orientation: "vertical"
-		width: self.parent.width
-		height: self.parent.height
-		spacing: "20dp"
-		padding: "20dp"
+		spacing: "5dp"
+		padding: "5dp"
 
 		BoxLayout:
 			orientation: "horizontal"
-			size_hint: (1, 0.1)
+			size_hint: (1, 0.13)
+			spacing: "10dp"
 
 			Image:
-				source: "img/logo.jpg"
+				source: "img/logo.png"
 				size_hint: (None, 1)
 
-			Label:
-				id: title_id
-				font_size: "40dp"
-				text: "Contact"
-				size_hint: (0.7, 1)
+			BoxLayout:
+				orientation: "vertical"
+				pos: self.parent.pos
+
+				Label:
+					size_hint: (1, 0.7)
+					id: title
+					font_size: "40dp"
+
+				Label:
+					size_hint: (1, 0.3)
+					id: date
+					font_size: "15dp"
+					
 
 			FloatLayout:
-				size_hint: (0.1, 1)
+				size_hint: (0.2, 1)
 
 				Button:
 					background_normal: "img/compteur.png"
@@ -65,6 +79,13 @@
 				Label:
 					pos: (self.parent.x, self.parent.y - 5)
 					text: str(root.acc_number)
+
+			Button:
+				background_normal: "img/oeil.png"
+				size_hint: (None, 1)
+				width: self.height
+				border: (0, 0, 0, 0)
+				on_release: root.see_contacts()
 			
 			Button:
 				background_normal: "img/return.png"
@@ -78,6 +99,7 @@
 		BoxLayout:
 			orientation: "horizontal"
 			size_hint: (1, 0.9)
+			spacing: "30dp"
 
 			GridLayout:
 				id: first_grid
@@ -88,75 +110,83 @@
 				cols: 2
 
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
-					markup: True
-					text: "[b]Genre[/b]"
+					text: "Genre"
 					text_size: self.size
 				Spinner:
-					id: gender_id
+					id: gender
 					text: "Monsieur"
 					values: ("Monsieur", "Madame")
+					font_size: "20dp"
+					background_color: [0.5, 0.5, 1, 0.7]
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
-					markup: True
-					text: "[b]Nom[/b]"
+					text: "Nom"
 					text_size: self.size
 				TextForm:
-					id: last_name_id
+					id: last_name
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
-					text: "[b]Prénom[/b]"
-					markup: True
+					text: "Prénom"
 					text_size: self.size
 				TextForm:
-					id: first_name_id
+					id: first_name
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
-					markup: True
-					text: "[b]Mail[/b]"
+					text: "Mail"
 					text_size: self.size
 				TextForm:
-					id: mail_id
+					id: mail
 					input_type: 'mail'
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
 					text: "Autre mail"
 					text_size: self.size
 				TextForm:
-					id: mail2_id
+					id: mail2
 					input_type: 'mail'
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
 					text: "Adresse"
 					text_size: self.size
 				TextForm:
-					id: street_id
+					id: street
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
 					text: "Ville"
 					text_size: self.size
 				TextForm:
-					id: town_id
+					id: town
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
 					text: "Code postal"
 					text_size: self.size
 				TextForm:
-					id: postal_code_id
+					id: postal_code
 					input_type: 'number'
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
 					text: "Pays"
 					text_size: self.size
 				TextForm:
-					id: country_id
+					id: country
 					text: "France"
 				Label:
+					valign: "middle"
 					font_size: self.height / 1.5
 					text: "Téléphone"
 					text_size: self.size
 				TextForm:
-					id: phone_id
+					id: phone
 					input_type: 'tel'
 			BoxLayout:
 				orientation: "vertical"
@@ -170,46 +200,58 @@
 					cols: 2
 
 					Label:
+						valign: "middle"
 						font_size: self.height / 1.5
 						markup: True
-						text: "[b]Etudes[/b]"
+						text: "Etudes"
 						text_size: self.size
-					Spinner:
-						id: studies_id
+					SpinnerOthers:
+						id: studies
 						text: "-"
 						values: ("1e S", "Terminal S", "L1", "L2, L3", "Prépa 1e année", "Prépa 2e année", "DUT 1e année", "DUT 2e année", "Autres")
+						other_values: ("", "Conseiller d'orientation", "STI2D", "Seconde", "Collégien", "Famille")
+						background_color: [0.5, 0.5, 1, 0.7]
+						font_size: "20dp"
 					Label:
+						valign: "middle"
 						font_size: self.height / 1.5
 						text: "Dernier diplôme"
 						text_size: self.size
 					TextForm:
-						id: degree_id
+						id: degree
 					Label:
-						font_size: self.height / 1.5
-						text: "Expérience mastère"
-						text_size: self.size
-					TextForm:
-						id: master_id
-						input_type: 'number'
-					Label:
+						valign: "middle"
 						font_size: self.height / 2.5
 						text: "Comment avez-vous connu l'EISTI?"
 						text_size: self.size
+						valign: "middle"
 					Spinner:
-						id: eisti_id
+						id: eisti
 						text: "Dans ce salon"
 						values: ("Dans ce salon", "Dans la presse", "Forum dans votre lycée", "Plaquette EISTI reçue", "Par relation (amis, famille)", "Via les moteurs de recherche", "Sur un site web d'orientation", "Via APB ou SCEI", "Autres")
+						background_color: [0.5, 0.5, 1, 0.7]
+						font_size: "20dp"
 					Label:
+						valign: "middle"
+						font_size: self.height / 2.5
+						text: "Concernant les mastères spécialisés, expérience"
+						valign: "middle"
+						text_size: self.size
+					TextForm:
+						id: master
+						input_type: 'number'
+					Label:
+						valign: "middle"
 						font_size: self.height / 1.5
 						text: "Commentaire"
 						text_size: self.size
 					TextForm:
-						id: comment_id
+						id: comment
 				RelativeLayout:
 					size_hint: (1, 0.5)
 
 					Button:
-						id: save_id
+						id: save
 						center: (self.parent.width / 2, self.parent.height / 2)
 						size_hint: (None, None)
 						width: "200dp"
@@ -217,3 +259,150 @@
 						text: "Enregistrer"
 						font_size: "20dp"
 						on_release: root.save()
+						background_color: [0.5, 0.5, 1., 0.7]
+
+
+<ErrorBubble>:
+	size_hint: (None, None)
+	pos_hint: {'center_x': 0.5, 'top': 0.1}
+	show_arrow: False
+	message: message
+	
+	BubbleButton:
+		id: message
+
+<Contact>:
+	time: 
+	contact:
+	size_hint_y: None
+    height: "50dp"
+
+    BoxLayout:
+        pos: root.pos
+    	orientation: "horizontal"
+    	width: self.parent.width
+        height: self.parent.height
+    	spacing: "10dp"
+
+    	Label:
+    		font_size: "25dp"
+    		text: root.contact.first_name
+
+    	Label:
+    		font_size: "25dp"
+    		text: root.contact.last_name
+
+		Label:
+    		font_size: "25dp"
+    		text: root.time
+
+    	Button:
+    		background_normal: "img/edit_contact.png"
+    		size_hint: (None, 1)
+            width: self.height
+            border: (0, 0, 0, 0)
+            on_release: root.edit_contact()
+
+<ContactsList>:
+	event:
+	list_layout: list_layout
+	on_pre_enter: root.load_contacts()
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: "10dp"
+        padding: "10dp"
+
+        BoxLayout:
+            size_hint: (1, 0.13)
+            orientation: "horizontal"
+            spacing: "20dp"
+
+            Image:
+                source: "img/logo.png"
+                size_hint: (None, 1)
+
+            Label:
+                font_size: "40dp"
+                text: str(root.event.name)
+
+            Button:
+                background_normal: "img/return.png"
+                size_hint: (None, 1)
+                width: self.height
+                border: (0, 0, 0, 0)
+                on_release: 
+                	root.manager.transition.direction = 'right'
+					root.manager.current = "ContactForm #" + str(root.event.id)
+
+		ScrollView:
+			size_hint: (1, 0.9)
+
+		    GridLayout:
+		        id: list_layout
+		        orientation: "vertical"
+		        cols: 1
+	        	size_hint: (1, None)
+		        spacing: "10dp"
+
+<OthersPopup>:
+	textinput: textinput
+	choices: choices
+
+	size_hint: (0.40, 0.40)
+    title: 'Merci de préciser le champ autres'
+    title_size: 15
+
+    BoxLayout:
+    	width: root.width
+    	height: root.height
+    	orientation: "vertical"
+    	spacing: "10dp"
+    	padding: "10dp"
+    	
+        GridLayout:
+        	orientation: "vertical"
+        	cols: 2
+	        spacing: "20dp"
+	        padding: "5dp"
+	        row_default_height: "50dp"
+        	row_force_default: True
+        	cols_minimum: {0: self.width * .3, 1: self.width * .6}
+
+		    Label:
+		    	size_hint_x: 0.2
+		    	valign: "middle"
+				font_size: "20dp"
+				text: "Autres choix :"
+				text_size: self.size
+
+	        Spinner:
+	        	id: choices
+				values: root.values
+				font_size: "20dp"
+				text: ""
+				background_color: [0.5, 0.5, 1, 0.7]
+
+		    Label:
+		    	valign: "middle"
+				font_size: "20dp"
+				text: "Sinon :"
+				text_size: self.size
+
+	        TextForm:
+	            id: textinput
+
+	    AnchorLayout:
+	    	anchor_x: "center"
+	    	anchor_y: "bottom"
+
+		    Button:
+		    	size_hint: (None, None)
+		    	font_size: 20
+		    	width: "170dp"
+		    	height: "50dp"
+		    	text: "OK"
+		    	on_release: root.dismiss()
+
+<SpinnerOthers>:
+	other: "Autres"
