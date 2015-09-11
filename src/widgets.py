@@ -67,7 +67,7 @@ class Event(Widget):
     event = ObjectProperty()
     name = ObjectProperty()
     date = ObjectProperty()
-    
+
     def __init__(self, **kwargs):
         super(Event, self).__init__(**kwargs)
         self.event = kwargs['event']
@@ -94,8 +94,8 @@ class Event(Widget):
         DelEventPopUp(event=self.event, widget_to_delete=self).open()
 
     def get_EventsList(self):
-        """Get the EventsList associated to self. 
-        This is done to avoid typing self.parent.parent.parent, and allows 
+        """Get the EventsList associated to self.
+        This is done to avoid typing self.parent.parent.parent, and allows
         changing the view without breaking the code."""
 
         widget = self
@@ -118,7 +118,7 @@ class EventsList(Screen):
             self.list_layout.add_widget(Event(event=event))
 
     def add_event(self):
-        event = models.Event(name="", location="", 
+        event = models.Event(name="", location="",
             begin=datetime.date.today(), end=datetime.date.today())
         EventHandler(event=event, widget=self).open()
 
@@ -165,7 +165,7 @@ class TextForm(TextInput):
             instance._keyboard_move = move
             Window.bind(keyboard_height=move)
             move(Window, Window.keyboard_height)
-            
+
         else:
             Window.unbind(keyboard_height=instance._keyboard_move)
             reset = 0 if type(to_move) == Contacts else \
@@ -226,7 +226,7 @@ class ContactForm(Screen):
             self.accompanists = acc[0]
             self.acc_number = self.accompanists.number
         else:
-            self.accompanists = models.Accompanists(event_id=self.event.id, 
+            self.accompanists = models.Accompanists(event_id=self.event.id,
                                                     date=datetime.date.today())
             models.Session.add(self.accompanists)
             models.Session.commit()
@@ -265,7 +265,7 @@ class ContactForm(Screen):
 
     def update_contact_from_field(self):
         columns = self.contact.__table__.columns
-        attrs = [c.name for c in columns 
+        attrs = [c.name for c in columns
             if c.name not in ['id', 'postal_code', 'master']]
 
         for attr in attrs:
@@ -276,7 +276,7 @@ class ContactForm(Screen):
 
     def save(self):
         if not self.is_proper():
-            return 
+            return
 
         self.update_contact_from_field()
         models.Session.add(self.contact)

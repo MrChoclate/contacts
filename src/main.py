@@ -8,7 +8,9 @@ from kivy.config import Config
 
 import widgets
 
+
 class ContactsApp(App):
+
     def build(self):
         Window.bind(on_keyboard=self.hook_keyboard)
 
@@ -28,6 +30,6 @@ class ContactsApp(App):
             elif self.root.current.startswith("ContactsList"):
                 self.root.current = "ContactForm #" + self.root.current[14:]
             return True
-        
+
 if __name__ == '__main__':
     ContactsApp().run()

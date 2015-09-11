@@ -6,3 +6,4 @@ venv*
 bin/*
 db.sqlite3
 *.csv
+env
