@@ -34,7 +34,7 @@ def get_unique_id():
 
 
 def print_error(request, error):
-    bubble = widgets.ErrorBubble(message="Une erreur est servenue", duration=1)
+    bubble = widgets.ErrorBubble(message="Une erreur est survenue", duration=1)
     Window.children[0].children[0].add_widget(bubble)
 
 
