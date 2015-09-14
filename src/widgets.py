@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import string
+import re
 
 from kivy.core.window import Window
 from kivy.animation import Animation
@@ -23,6 +25,8 @@ import savecsv
 Builder.load_file("contact.kv")
 Builder.load_file("events.kv")
 
+def is_digits(number_string):
+    return all([c in string.digits for c in number_string])
 
 class Contacts(ScreenManager):
     pass
@@ -254,6 +258,23 @@ class ContactForm(Screen):
             self.add_widget(ErrorBubble(message="Merci de remplir vos études"))
             return False
 
+        if not is_digits(self.postal_code.text):
+            self.add_widget(ErrorBubble(
+                                message="Le code postal doit être un nombre"))
+            return False
+
+        if not is_digits(self.master.text):
+            self.add_widget(ErrorBubble(message="L'expérience concerant les" + \
+                                    " masters spécialisés doit être un nombre"))
+            return False
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", self.mail.text) or \
+            self.mail2.text and \
+            not re.match(r"[^@]+@[^@]+\.[^@]+", self.mail2.text):
+            self.add_widget(ErrorBubble(
+                                    message="L'adresse email n'est pas valide"))
+            return False
+
         return True
 
     def update_field_from_contact(self):
@@ -270,6 +291,7 @@ class ContactForm(Screen):
 
         for attr in attrs:
             setattr(self.contact, attr, getattr(self, attr).text.decode('utf-8'))
+            print attr, getattr(self.contact, attr)
         for attr in ['postal_code', 'master']:
             val = int(getattr(self, attr).text.decode('utf-8') or 0)
             setattr(self.contact, attr, val)
@@ -283,9 +305,8 @@ class ContactForm(Screen):
         models.Session.flush()
 
         number = models.Session.query(models.Participate).\
-            filter(models.Participate.event_id==self.event.id and \
+            filter(models.Participate.event_id==self.event.id,
                    models.Participate.contact_id==self.contact.id).count()
-
         if number == 0:  # This is an add, not an update
             participate = models.Participate(event_id=self.event.id,
                                          contact_id=self.contact.id,
