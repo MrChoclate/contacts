@@ -62,7 +62,7 @@
 					size_hint: (1, 0.3)
 					id: date
 					font_size: "15dp"
-					
+
 
 			FloatLayout:
 				size_hint: (0.2, 1)
@@ -86,13 +86,13 @@
 				width: self.height
 				border: (0, 0, 0, 0)
 				on_release: root.see_contacts()
-			
+
 			Button:
 				background_normal: "img/return.png"
 				size_hint: (None, 1)
 				width: self.height
 				border: (0, 0, 0, 0)
-				on_release: 
+				on_release:
 					root.manager.transition.direction = 'right'
 					root.manager.current = "EventsList"
 
@@ -123,21 +123,21 @@
 				Label:
 					valign: "middle"
 					font_size: self.height / 1.5
-					text: "Nom"
+					text: "Nom*"
 					text_size: self.size
 				TextForm:
 					id: last_name
 				Label:
 					valign: "middle"
 					font_size: self.height / 1.5
-					text: "Prénom"
+					text: "Prénom*"
 					text_size: self.size
 				TextForm:
 					id: first_name
 				Label:
 					valign: "middle"
 					font_size: self.height / 1.5
-					text: "Mail"
+					text: "Mail*"
 					text_size: self.size
 				TextForm:
 					id: mail
@@ -203,7 +203,7 @@
 						valign: "middle"
 						font_size: self.height / 1.5
 						markup: True
-						text: "Etudes"
+						text: "Etudes*"
 						text_size: self.size
 					SpinnerOthers:
 						id: studies
@@ -267,12 +267,12 @@
 	pos_hint: {'center_x': 0.5, 'top': 0.1}
 	show_arrow: False
 	message: message
-	
+
 	BubbleButton:
 		id: message
 
 <Contact>:
-	time: 
+	time:
 	contact:
 	size_hint_y: None
     height: "50dp"
@@ -331,7 +331,7 @@
                 size_hint: (None, 1)
                 width: self.height
                 border: (0, 0, 0, 0)
-                on_release: 
+                on_release:
                 	root.manager.transition.direction = 'right'
 					root.manager.current = "ContactForm #" + str(root.event.id)
 
@@ -359,7 +359,7 @@
     	orientation: "vertical"
     	spacing: "10dp"
     	padding: "10dp"
-    	
+
         GridLayout:
         	orientation: "vertical"
         	cols: 2
