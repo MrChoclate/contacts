@@ -291,7 +291,6 @@ class ContactForm(Screen):
 
         for attr in attrs:
             setattr(self.contact, attr, getattr(self, attr).text.decode('utf-8'))
-            print attr, getattr(self.contact, attr)
         for attr in ['postal_code', 'master']:
             val = int(getattr(self, attr).text.decode('utf-8') or 0)
             setattr(self.contact, attr, val)
