@@ -25,7 +25,7 @@ if platform == 'linux':
     _unique_id = 'linux-laptop'
 
 
-_HOSTNAME = "http://127.0.0.1:9200/"
+_HOSTNAME = "http://elasticsearch-prod.prod.cergy.eisti.fr/"
 _INDEX = "contacts/"
 
 
@@ -38,7 +38,7 @@ def print_error(request, error):
     Window.children[0].children[0].add_widget(bubble)
 
 
-def print_sucess(request, error):
+def print_success(request, error):
     bubble = widgets.ErrorBubble(message="Contact synchro", duration=1)
     Window.children[0].children[0].add_widget(bubble)
 
@@ -61,14 +61,28 @@ def search_event(event, return_=False):
              }
             }
 
-    sucess = None if return_ else \
+    success = None if return_ else \
         lambda req, res: update_or_create_event(event, res)
 
     req = UrlRequest(url=url, req_body=json.dumps(data), method=method,
-                     timeout=1, on_error=print_error, on_success=sucess)
+                     timeout=1, on_error=print_error, on_success=success)
     if return_:
         req.wait()  # We need the result before continuing
         return req.result
+
+def add_accompanists(accompanists, begin, end, data=None):
+    begin = datetime.datetime.strptime(begin, '%Y-%m-%d').date()
+    end = datetime.datetime.strptime(end, '%Y-%m-%d').date()
+    accs = {acc.date: acc.number for acc in accompanists}
+
+    res, date, delta = [], begin, datetime.timedelta(days=1)
+    while date <= end:
+        res.append(accs[date] if date in accs else 0)
+        date += delta
+
+    if data:
+        res = [a + b for a, b in zip(res, data)]
+    return res
 
 
 def update_or_create_event(event, result):
@@ -78,15 +92,16 @@ def update_or_create_event(event, result):
     url = _HOSTNAME + _INDEX + 'event/'
     accompanists = models.Session.query(models.Accompanists).\
         filter(models.Accompanists.event_id == event.id).all()
+    print([(acc.event_id, acc.date) for acc in accompanists])
 
     if result['hits']['total'] == 0:  # We need to create the event
         data = models.to_dict(event)
-        data['accompanists'] = {str(acc.date): acc.number
-                                for acc in accompanists}
+        data['accompanists'] = add_accompanists(
+            accompanists, data['begin'], data['end'])
         data['from'] = [get_unique_id()]
         del data['id']
         UrlRequest(url=url, req_body=json.dumps(data), on_error=print_error,
-                   on_success=lambda req, res: send_contacts(event, result), timeout=1,
+                   on_success=lambda req, res: send_contacts(event, result, _id=res['_id']), timeout=1,
                    on_failure=print_error)
 
     else:
@@ -97,12 +112,8 @@ def update_or_create_event(event, result):
 
         # We add our id and our accompanists
         res['from'].append(get_unique_id())
-        for acc in accompanists:
-            d = str(acc.date)
-            if d not in res['accompanists']:
-                res['accompanists'][d] = acc.number
-            else:
-                res['accompanists'][d] += acc.number
+        res['accompanists'] = add_accompanists(
+            accompanists, res['begin'], res['end'], res['accompanists'])
 
         url += result['hits']['hits'][0]['_id'] + '/_update'
         res = {"doc": res}
@@ -111,10 +122,11 @@ def update_or_create_event(event, result):
                    on_failure=print_error)
 
 
-def send_contacts(event, result):
+def send_contacts(event, result, _id=None):
     # Get the _id after a post request, we need to search again.
-    res = search_event(event, return_=True)
-    _id = res['hits']['hits'][0]['_id']
+    if _id is None:
+        res = search_event(event, return_=True)
+        _id = res['hits']['hits'][0]['_id']
 
     for participate in event.contacts:
         contact, date = participate.contact, participate.date
@@ -152,7 +164,7 @@ def create_or_none(result, contact, date, _id):
         data['tablet'] = get_unique_id()
         del data['id']
 
-        UrlRequest(url=url, req_body=json.dumps(data), on_success=print_sucess,
+        UrlRequest(url=url, req_body=json.dumps(data), on_success=print_success,
                    on_error=print_error, on_failure=print_error)
 
 

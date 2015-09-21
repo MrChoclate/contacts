@@ -1,4 +1,5 @@
-curl -XPUT "127.0.0.1:9200/contacts" -d '{
+curl -XDELETE 'http://elasticsearch-prod.prod.cergy.eisti.fr/contacts/';
+curl -XPUT "http://elasticsearch-prod.prod.cergy.eisti.fr/contacts" -d '{
     "mappings": {
         "event" : {
             "properties": {
@@ -9,6 +10,17 @@ curl -XPUT "127.0.0.1:9200/contacts" -d '{
                 "location": {
                     "type": "string",
                     "index": "not_analyzed"
+                },
+                "begin": {
+                    "type": "date",
+                    "format": "yyyy-MM-dd"
+                },
+                "end": {
+                    "type": "date",
+                    "format": "yyyy-MM-dd"
+                },
+                "accompanists": {
+                    "type" : "long"
                 }
             }
         },

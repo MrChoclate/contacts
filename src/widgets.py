@@ -333,6 +333,8 @@ class DelEventPopUp(Popup):
         self.widget_to_delete = kwargs['widget_to_delete']
 
     def delete_event(self):
+        models.Session.query(models.Accompanists).filter(
+            models.Accompanists.event_id == self.event.id).delete()
         models.Session.delete(self.event)
         models.Session.commit()
         self.widget_to_delete.parent.remove_widget(self.widget_to_delete)
