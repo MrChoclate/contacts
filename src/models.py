@@ -77,7 +77,7 @@ class Event(_Base):
     location = Column(String)
     begin =  Column(Date, default=datetime.date.today())
     end =  Column(Date, default=datetime.date.today())
-    contacts = relationship('Participate', cascade='delete')
+    contacts = relationship('Participate', cascade='delete', order_by='Participate.date.desc()')
 
 class Participate(_Base):
     """Contacts participate to an event.
