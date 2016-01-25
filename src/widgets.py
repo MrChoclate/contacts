@@ -290,7 +290,10 @@ class ContactForm(Screen):
             if c.name not in ['id', 'postal_code', 'master']]
 
         for attr in attrs:
-            setattr(self.contact, attr, getattr(self, attr).text.decode('utf-8'))
+            text = getattr(self, attr).text.decode('utf-8')
+            if attr in ['first_name', 'last_name']:
+                text = text.capitalize()
+            setattr(self.contact, attr, text)
         for attr in ['postal_code', 'master']:
             val = int(getattr(self, attr).text.decode('utf-8') or 0)
             setattr(self.contact, attr, val)
