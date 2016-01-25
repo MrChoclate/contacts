@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import os
 
 from kivy import platform
 
@@ -19,6 +20,9 @@ def save_csv_event(event):
     source = '/sdcard/exportcsv/' if platform == 'android' else ''
     filename = source + event_name + '-' + event_location + '-'
     filename += str(datetime.datetime.now()) + '.csv'
+
+    if not os.path.exists(source):
+        os.makedirs(source)
 
     with open(filename, 'w') as f:
         accompanists = models.Session.query(models.Accompanists).\
