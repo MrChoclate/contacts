@@ -316,6 +316,9 @@ class ContactForm(Screen):
             models.Session.add(participate)
         models.Session.commit()
 
+        self.add_widget(ErrorBubble(
+            message="Le contact a bien été enregistré", duration=3)
+        )
         self.reset()
 
     def see_contacts(self):
